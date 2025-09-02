@@ -139,41 +139,74 @@ Foo.prototype-->|constructor|Function的Foo;
 
   - 赋值时函数脱离了对象上下文，不再是 `obj.fn()` 的形式，因此退化为默认绑定。
 
+  ### 6.箭头函数的this绑定
+
+  ```js
+  // 箭头函数的方法丢失绑定
+  const obj = {
+    x: 10,
+    method() {
+      const arrow = () => console.log(this.x);
+      return arrow;
+    }
+  };
+  
+  const fn = obj.method(); 
+  fn(); // 10
+  // 箭头函数在方法里调用
+  const obj = {
+    x: 10,
+    method() {
+      const arrow = () => {
+        console.log(this.x);
+      };
+      arrow();
+    }
+  };
+  obj.method(); // 10
+  ```
+
+  #### 结论：以上this都是obj
+
+  #### 原因：箭头函数的this不同于普通函数的this，它是在定义时捕获的，定义时找到外层最近的非箭头函数，直接捕获。而普通函数在上述对象方法中是调用时决定的。
+  
+  
+
   ------
 
   ## 🧠 小结口诀
-
+  
   > 🧾 “谁点的我，我就是谁。”（隐式绑定）
   >  🧾 “丢了对象就是默认绑。”（隐式丢失）
   >  🧾 “call、apply、bind 是显式。”
   >  🧾 “new 就指向新对象。”
-  >  🧾 “箭头函数不绑定 this。”
-
+  >  🧾 “箭头函数不绑定 this。定义时就捕获this绑定的对象”
+  
   ------
-
+  
   ## ⚠️ 流程图常见错误说明
-
+  
   许多版本的 `this` 决策图中，有如下错误：
-
+  
   > ❌ “Is the function called as a method?” → Yes → Default Binding
-
+  
   这是 **错误的**。
    **正确应为：Yes → 隐式绑定（this = 对象）**
-
+  
   ------
-
+  
   ## ✅ 结语
-
+  
   掌握 `this` 的绑定规则，核心是理解调用方式，而不是定义位置。
-
+  
   建议多做实践题，如：
-
+  
   - `setTimeout` 回调中的 `this`
   - 对象方法赋值后调用
   - 箭头函数与普通函数混合场景
-
+  
   也可以绘制一张自己的流程图加强记忆。
-
+  
   ```
   ---
   
